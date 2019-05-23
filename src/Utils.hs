@@ -25,3 +25,7 @@ replaceAt2 l e c r =
 generate :: a -> Int -> [a]
 generate _ 0 = []
 generate x n = x : generate x (n-1)
+
+-- Wypisuje kazdy wiersz tablicy dwuwymiarowej w nowej linii
+prettyPrint :: Show a => [[a]] -> IO ()
+prettyPrint x = mapM_ print x
