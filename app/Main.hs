@@ -1,18 +1,18 @@
 module Main where
 
+import System.Environment
 import Lib
 import Input
 
 main :: IO ()
 main = do
-  putStrLn "Filename: "
-  filename <- getLine
+  --- Nazwa pliku jest brana z argumentow programu
+  args <- getArgs
+  let filename = args !! 0
+
   fileContent <- readFile filename
 
-  putStrLn $ "--- File content ---"
-  putStrLn $ fileContent
-  putStrLn $ "--- EOF ---"
-
+  --- Parsowanie pliku z ograniczeniami nanogramu
   let constraints = readConstraints (lines fileContent)
 
   putStrLn $ "--- Parsed Constraints ---"
