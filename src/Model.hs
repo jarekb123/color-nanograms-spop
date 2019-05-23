@@ -7,7 +7,7 @@ data Color
   | Yellow
   | Green
   | Orange
-  deriving (Show, Read)
+  deriving (Show, Read, Eq)
 
 -- Block - mowi ile kratek danego koloru musi byc zamalowanych w jednym bloku
 type Block = (Int, Color)

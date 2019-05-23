@@ -1,0 +1,6 @@
+Column [(1, Black)]
+Column [(1, Black), (1, Red), (1, Black)]
+Column [(1, Black)]
+Row [(1, Black)]
+Row [(1, Black), (1, Red), (1, Black)]
+Row [(1, Black)]

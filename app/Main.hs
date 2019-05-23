@@ -18,14 +18,17 @@ main = do
   --- Parsowanie pliku z ograniczeniami nanogramu
   let constraints = readConstraints (lines fileContent)
 
-  putStrLn $ "--- Parsed Constraints ---"
-  putStrLn $ show constraints
+  putStrLn $ "--- Parsed Input ---"
 
-  let numOfColumns = length (getColumns constraints)
-  let numOfRows = length (getRows constraints)
+  let columnsConstraints = getColumns constraints
+  let rowsConstraints = getRows constraints
 
-  putStrLn $ ("numOfColumns: " ++ show numOfColumns)
-  putStrLn $ ("numOfRows: " ++ show numOfRows)
+  let numOfColumns = length columnsConstraints
+  let numOfRows = length rowsConstraints
+
+  putStrLn $ ("Dimension: " ++ show numOfColumns ++ "x" ++ show numOfRows)
+  putStrLn $ ("Column constraints: " ++ show columnsConstraints)
+  putStrLn $ ("Rows constraints: " ++ show rowsConstraints)
 
   let nanogram = emptyNanogram numOfColumns numOfRows
   putStrLn $ "--- Empty nanogram ---"
