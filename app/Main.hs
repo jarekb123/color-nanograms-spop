@@ -30,6 +30,8 @@ main = do
   putStrLn $ ("Column constraints: " ++ show columnsConstraints)
   putStrLn $ ("Rows constraints: " ++ show rowsConstraints)
 
+  ----- TESTOWANIE POJEDYNCZYCH FUNCKJI ---
+
   let nanogram = emptyNanogram numOfColumns numOfRows
   putStrLn $ "--- Empty nanogram ---"
   prettyPrint nanogram
