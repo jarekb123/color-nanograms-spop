@@ -24,16 +24,15 @@ putColor n color col row = replaceAt2 n color col row
 
   1. brak warunkow do sprawdzenia, a pozostaly bloki do sprawdzenia -> FALSE
   2. sa warunki do sprawdzenia, a brak pozostalych blokow do sprawdzenia -> TRUE
-  3. brak warunkow, brak blokow do sprawdzenia -> TRUE
+  3. brak warunkow, brak blokow do sprawdzenia -> TRUE (ten warunek pokrywa sie z tym wyzej)
   4. kolor bloku warunku != kolor bloku sprawdzanego -> sprawdz z nastepnym warunkiem
   5. (kolor bloku warunku == kolor bloku sprawdzanego) && (liczba zamalowanych > max wielkosc bloku) ->
       sprawdz dla nastepnego bloku warunku i aktualnego bloku sprawdzanego
   6. otherwise -> sprawdz dla nastepnego bloku warunku i nastepnego bloku sprawdzanego
 -}
 isBlocksMatching :: [Block] -> [Block] -> Bool
-isBlocksMatching [] [] = True
-isBlocksMatching [] (b:bs) = False
-isBlocksMatching (b:bs) [] = True
+isBlocksMatching [] b = False
+isBlocksMatching b [] = True
 isBlocksMatching ((n1, c1):bs1) ((n2, c2):bs2)
   | c2 /= c1 = isBlocksMatching bs1 ((n2,c2):bs2)
   | (c2 == c1) && (n2 > n1) = isBlocksMatching bs1 ((n2,c2):bs2)
@@ -47,8 +46,6 @@ isMatchingConstraints col ctr
     let colorsBlocks = colorsToBlocks col
         ctrBlocks = constraintsToBlocks ctr
     in  isBlocksMatching ctrBlocks colorsBlocks
-
-
 
 ------ Mappers ----
 colorsToBlocks :: [Color] -> [Block]
