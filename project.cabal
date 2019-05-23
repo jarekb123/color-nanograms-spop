@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 91e6545d868a991e0b339b97da95cc3c8faa30af0e068ec8a8f3cfd1b2e0f623
+-- hash: 2cf486dfe6d20674ee34524b7475d0b43e3422ef0492af341448c4234dceee46
 
 name:           project
 version:        0.1.0.0
@@ -29,6 +29,9 @@ library
   exposed-modules:
       Input
       Lib
+      Model
+      Solver
+      Utils
   other-modules:
       Paths_project
   hs-source-dirs:

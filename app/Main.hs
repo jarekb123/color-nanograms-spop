@@ -3,6 +3,7 @@ module Main where
 import System.Environment
 import Lib
 import Input
+import Solver
 
 main :: IO ()
 main = do
