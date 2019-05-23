@@ -57,8 +57,9 @@ main = do
 
   putStrLn $ ("Col 0: isMatchingConstraints: " ++ show (isMatchingConstraints col0 col0Constr))
 
-  putStrLn $ ("Row 0 & Col 0: isRowColMatchesConstr: " ++
+  putStrLn $ ("Col 0 & Row 0: isRowColMatchesConstr: " ++
     show (isColRowMatchesConstr nanogram2 columnsConstraints rowsConstraints 0 0))
-
+  putStrLn $ ("Col 1 & Row 0: isRowColMatchesConstr: " ++
+    show (isColRowMatchesConstr nanogram2 columnsConstraints rowsConstraints 1 0))
 
   return ()
