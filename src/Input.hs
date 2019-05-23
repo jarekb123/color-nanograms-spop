@@ -13,6 +13,6 @@ isRow :: Constraints -> Bool
 isRow (Row _)    = True
 isRow (Column _) = False
 
-getColumns = filter isColumn
+getColumnsConstraints = filter isColumn
 
-getRows = filter isRow
+getRowsConstraints = filter isRow

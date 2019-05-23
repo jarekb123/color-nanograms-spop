@@ -1,5 +1,7 @@
 module Model where
 
+import Data.List
+
 data Color
   = Empty
   | Black
@@ -16,3 +18,12 @@ data Constraints
   = Column [Block]
   | Row [Block]
   deriving (Show, Read)
+
+-- Nanogram - typ reprezentujacy nanogram z zamalowanymi kratkami (boxami)
+type Nanogram = [[Color]]
+
+getRow :: Nanogram -> Int -> [Color]
+getRow n r = n !! r
+
+getColumn :: Nanogram -> Int -> [Color]
+getColumn n c = (transpose n) !! c
