@@ -3,7 +3,7 @@ module Main where
 import System.Environment
 import Lib
 import Input
-import Solver
+import ConstraintsHelpers
 import Model
 import Utils
 import Algorithms

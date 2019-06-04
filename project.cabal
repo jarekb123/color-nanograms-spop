@@ -34,6 +34,7 @@ library
       Utils
       Algorithms
       Mappers
+      ConstraintsHelpers
   other-modules:
       Paths_project
   hs-source-dirs:
