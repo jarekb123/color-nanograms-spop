@@ -21,3 +21,11 @@ cabal.project.local~
 .HTF/
 .ghc.environment.*
 out
+idea-flex.skeleton
+target/
+.idea/
+idea/
+*~
+out/
+project/project/
+jflex-*.jar
