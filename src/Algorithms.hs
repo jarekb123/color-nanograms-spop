@@ -52,5 +52,5 @@ allPossibleSolutions bs n =
       remainingEmptyCells = countEmpty filledWithNeededEmpty n
       remainingEmptyBlocks = generateN (1, Empty) remainingEmptyCells
    -- nub - usuwa duplikaty z listy
-   -- (mogą wystąpić przy generowaniu rozwiązań gdy sąsiednie bloki są tego samego koloru)
+   -- (mogą wystąpić przy generowaniu rozwiązań gdy sąsiednie bloki są tego samego koloru - wykryte unit testami)
    in nub (map groupBlocks (interleave remainingEmptyBlocks filledWithNeededEmpty))
