@@ -9,6 +9,7 @@ data Color
   | Yellow
   | Green
   | Orange
+  | Cyan
   deriving (Show, Read, Eq)
 
 -- Block - mowi ile kratek danego koloru musi byc zamalowanych w jednym bloku

@@ -11,10 +11,11 @@ translateColor color
     | color == Green = Console.Green
     | color == Yellow = Console.Yellow
     | color == Orange = Console.Magenta -- brak pomarańczowego w System.Console.Ansi
+    | color == Cyan = Console.Cyan
 
-testNanogram = [[Red, Black, Red],
-                [Red, Black, Red],
-                [Black, Red, Black]]
+testNanogram = [[Empty, Black, Red],
+                [Green, Yellow, Orange],
+                [Cyan, Red, Black]]
 
 putCharWithColor :: Char -> Console.Color -> IO ()
 putCharWithColor x c = do
