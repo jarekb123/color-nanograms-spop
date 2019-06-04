@@ -3,11 +3,12 @@ module Algorithms where
 
 import           Data.List
 import           Model
+import           Utils
 
 -- Funkcja zliczająca ilość pustych komórek może być jeszcze wstawionych w wierszu/kolumnie
 --
 -- 1st arg: [Block] - warunki wiersza/kolumny
--- 2nd arg: Int - wielkosc wiersza kolumny
+-- 2nd arg: Int - wielkosc wiersza/kolumny
 countEmpty :: [Block] -> Int -> Int
 countEmpty [] n          = n
 countEmpty ((x, c):bs) n = countEmpty bs (n - x)
@@ -37,10 +38,6 @@ groupBlocks [x] = [x]
 groupBlocks ((x1, c1):(x2, c2):xs)
   | c1 == c2 = groupBlocks ((x1 + x2, c1) : xs)
   | otherwise = (x1, c1) : groupBlocks ((x2, c2) : xs)
-
--- Funkcja generująca n-elementową listę tych samych wartości
-generateN :: a -> Int -> [a]
-generateN a n = [a | _ <- [1 .. n]]
 
 -- Funkcja generują wszystkie możliwe rozwiązania wiersza/kolumny
 --

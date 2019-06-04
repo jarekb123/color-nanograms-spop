@@ -1,7 +1,8 @@
-module Algorithms.AllSolutionsSpec (spec) where
+module AlgorithmsSpec (spec) where
 
 import Test.Hspec
 import Algorithms
+import Utils
 import Model
 
 spec :: Spec

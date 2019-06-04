@@ -33,6 +33,7 @@ library
       Solver
       Utils
       Algorithms
+      Mappers
   other-modules:
       Paths_project
   hs-source-dirs:
@@ -55,7 +56,8 @@ executable project-exe
 
 test-suite unit-tests
   exposed-modules:
-      Algorithms.AllSolutionsSpec
+      AlgorithmsSpec
+      MappersSpec
   type: exitcode-stdio-1.0
   main-is: Spec.hs
   hs-source-dirs: test

@@ -28,3 +28,7 @@ generate x n = x : generate x (n - 1)
 -- Wypisuje kazdy wiersz tablicy dwuwymiarowej w nowej linii
 prettyPrint :: Show a => [[a]] -> IO ()
 prettyPrint x = mapM_ print x
+
+-- Funkcja generująca n-elementową listę tych samych wartości
+generateN :: a -> Int -> [a]
+generateN a n = [a | _ <- [1 .. n]]
