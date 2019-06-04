@@ -18,13 +18,13 @@ testNanogram = [[Red, Black, Red],
 
 putCharWithColor :: Char -> Console.Color -> IO ()
 putCharWithColor x c = do
-    Console.setSGR [Console.SetColor Console.Foreground Console.Vivid c]
+    Console.setSGR [Console.SetColor Console.Background Console.Vivid c]
     putChar x
     Console.setSGR [Console.Reset]
 
 outputRow :: [Color] -> IO ()
 outputRow [] = putChar '\n'
-outputRow (x:xs) = do   (putCharWithColor 'X') (translateColor x)
+outputRow (x:xs) = do   (putCharWithColor ' ') (translateColor x)
                         outputRow xs
 
 outputNanogram :: Nanogram -> IO ()
