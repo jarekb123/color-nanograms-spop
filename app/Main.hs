@@ -17,6 +17,7 @@ checkNanogram :: Maybe Nanogram -> Nanogram
 checkNanogram Nothing  = emptyNanogram 4 4
 checkNanogram (Just n) = n
 
+
 main :: IO ()
 main = do
   --- Nazwa pliku jest brana z argumentow programu
@@ -76,46 +77,63 @@ main = do
   prettyPrint nan
 
 
-  putStrLn $ "--- Testing solutioner ---"
-  let const_1 = checkColConstraints nan columnsConstraints (numOfColumns - 1)
-  putStrLn $ (if const_1 then "true" else "false")
-
-  putStrLn $ "--- Testing checkNanograms ---"
-
-  let checkNano = checkNanograms nanogram
-                                 solutions
-                                 columnsConstraints
-                                 rowsConstraints
-                                 numOfColumns
-                                 numOfRows
-                                 0
-  let ioNano = check checkNano
-  putStrLn $ ioNano
-
-  putStrLn $ "--- Testing solve helper ---"
-  -- solveHelper :: Maybe Nanogram -> [Constraints] -> [Constraints] -> Int -> Int -> Int -> Maybe Nanogram
-  let eNanogram = emptyNanogram numOfColumns numOfRows
-
-  -- let solveNan = solveHelper (Just eNanogram)
-  --                            columnsConstraints
-  --                            rowsConstraints
-  --                            numOfColumns
-  --                            numOfRows
-  --                            0
-  -- let solvedNanogram = checkNanogram solveNan
-  -- prettyPrint solvedNanogram
-
+  putStrLn $ "--- Testing checkColConstraints ---"
+  -- let const_1 = checkColConstraints columnsConstraints (numOfColumns - 1) nan
+  -- putStrLn $ (if const_1 then "true" else "false")
   putStrLn $ show
-    (solveHelper (Just eNanogram)
-                 columnsConstraints
-                 rowsConstraints
-                 numOfColumns
-                 numOfRows
-                 0
-    )
+    (checkColConstraintsDebuger columnsConstraints (numOfColumns - 1) nan)
+
+  putStrLn $ "--- Testing filterNanograms ---"
+  let filteredNanograms =
+        (filterNanograms [nan1, nanogram, nanogram]
+                         columnsConstraints
+                         (numOfColumns - 1)
+        )
+  putStrLn $ show (length filteredNanograms)
+
+  putStrLn $ "--- Testing findNanogramsFromSolutions ---"
+  -- findNanogramsForSolution :: [Constraints] -> Int -> Int -> [Block] -> [Nanogram] -> [Nanogram]
+
+  let fn = findNanogramsFromSolutions columnsConstraints
+                                      (numOfColumns - 1)
+                                      0
+                                      solutions
+                                      nanogram
+  putStrLn $ show (fn)
 
 
---
+  putStrLn $ "--- Testing findNanogramsFromNanograms ---"
+  -- findNanogramsFromNanograms :: [Constraints] -> Int -> Int -> [[Block]] -> [Nanogram] -> [Nanogram]
+  let fnn = findNanogramsFromNanograms columnsConstraints
+                                       (numOfColumns - 1)
+                                       0
+                                       solutions
+                                       [nanogram, nanogram]
+  putStrLn $ show (fnn)
+
+  putStrLn $ "--- Testing findNanograms ---"
+  -- findNanograms :: [Constraints] -> Int -> [Constraints] -> Int -> [Nanogram] -> [[Nanogram]]
+  let fnan = findNanograms columnsConstraints
+                           (numOfColumns - 1)
+                           rowsConstraints
+                           0
+                           [nanogram]
+  putStrLn $ show (fnan)
+
+  putStrLn $ "--- Testing findSolutions ---"
+  -- findSolutions :: [Constraints] -> Int -> [Constraints] -> Int -> Int -> [Nanogram] -> [Nanogram]
+  let fs = findSolutions columnsConstraints
+                         (numOfColumns - 1)
+                         rowsConstraints
+                         numOfRows
+                         0
+                         [nanogram]
+  putStrLn $ show (fs)
+
+  putStrLn $ "--- Testing findSolution ---"
+  let final = findSolution constraints
+  prettyPrint final
+
 --  let row0 = getRow nanogram2 0
 --  let row0Constr = rowsConstraints !! 0
 --  putStrLn $ ("Row 0: " ++ show row0)

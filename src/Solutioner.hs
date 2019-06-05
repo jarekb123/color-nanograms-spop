@@ -11,81 +11,93 @@ import           Data.List
 import           Debug.Trace
 
 
--- solveNanogram :: [Constraints] -> Nanogram
--- solveNanogram constraints =
---     let columnsConstraints = getColumnsConstraints constraints
---         rowsConstraints = getRowsConstraints constraints
---         numOfColumns = length columnsConstraints
---         numOfRows = length rowsConstraints
---         nanogram = emptyNanogram numOfColumns numOfRows
---         solve = solveHelper (Just nanogram) columnsConstraints rowsConstraints numOfColumns numOfRows 0 0 
---     in case solve of
---         Just n -> n
---         Nothing -> nanogram
+findSolution :: [Constraints] -> Nanogram
+findSolution constraints =
+    let columnsConstraints = getColumnsConstraints constraints
+        rowsConstraints    = getRowsConstraints constraints
+        numOfColumns       = length columnsConstraints
+        numOfRows          = length rowsConstraints
+        nanogram           = emptyNanogram numOfColumns numOfRows
+        solutions          = findSolutions columnsConstraints
+                                           (numOfColumns - 1)
+                                           rowsConstraints
+                                           numOfRows
+                                           0
+                                           [nanogram]
+    in  concat solutions
 
--- solveHelperDebug 
 
--- nanogram -> ograniczenia kolumn -> ograniczenia wierszy -> liczba kolumn -> liczba wierszy -> aktualny numer wiersza
-solveHelper
-    :: Maybe Nanogram
-    -> [Constraints]
-    -> [Constraints]
+-- ograniczenia kolumn -> liczba kolumn -> ograniczenia wierszy -> liczba wierszy -> który wiersz -> wejściowe nanogramy
+findSolutions
+    :: [Constraints]
     -> Int
-    -> Int
-    -> Int
-    -> Maybe Nanogram
-solveHelper (Just n) col_const row_const num_col num_row row
-    | row == num_row = Just n
-    | len > 0 = checkNanogramsDebug n
-                                    solutions
-                                    col_const
-                                    row_const
-                                    num_col
-                                    num_row
-                                    row
-    | len == 0 = Nothing
-  where
-    rowConst  = row_const !! row
-    (Row b)   = rowConst
-    solutions = allPossibleSolutions b num_col
-    len       = length solutions
-solveHelper Nothing _ _ _ _ _ = Nothing
-
-checkNanogramsDebug n x col_const row_const num_col num_row row =
-    trace ("checkNanograms: " ++ show n ++ "---" ++ show row ++ "---" ++ show x)
-        $ checkNanograms n x col_const row_const num_col num_row row
-
--- Nanogram -> Możliwe rozwiązania wiersza -> ograniczenia kolumn -> ograniczenia wierszy -> liczba kolumn -> liczba wierszy -> aktualny numer wiersza
-checkNanograms
-    :: Nanogram
-    -> [[Block]]
-    -> [Constraints]
     -> [Constraints]
     -> Int
     -> Int
-    -> Int
-    -> Maybe Nanogram
-checkNanograms _ [] _ _ _ _ _ = Nothing
-checkNanograms n (x : xs) col_const row_const num_col num_row row =
-    let row_colors = blocksArrayToColorArray x
-        row_nan    = replaceRow n row_colors row
-    in  case (checkColConstraintsDebuger row_nan col_const (num_col - 1)) of
-            True -> solveHelper (Just row_nan)
-                                col_const
-                                row_const
-                                num_col
-                                num_row
-                                (row + 1)
-            False -> checkNanogramsDebug n
-                                         xs
-                                         col_const
-                                         row_const
-                                         num_col
-                                         num_row
-                                         row
+    -> [Nanogram]
+    -> [Nanogram]
+findSolutions col_const num_col row_const num_row row nan
+    | row == num_row = nan
+    | otherwise = findSolutions
+        col_const
+        num_col
+        row_const
+        num_row
+        (row + 1)
+        (findNanograms col_const num_col row_const row nan)
 
+-- ograniczenia kolumn -> liczba kolumn -> ograniczenia wierszy -> który wiersz -> wejściowe nanogramy
+findNanograms
+    :: [Constraints] -> Int -> [Constraints] -> Int -> [Nanogram] -> [Nanogram]
+findNanograms col_const num_col row_const row nan =
+    let rowRowConst     = row_const !! row
+        (Row rowBlocks) = rowRowConst
+        solutions       = allPossibleSolutions rowBlocks (num_col + 1)
+    in  findNanogramsFromNanograms col_const num_col row solutions nan
 
-checkColConstraintsDebuger n col_const num_col =
+-- ograniczenia kolumn -> liczba kolumn -> który wiersz -> rozwiązania -> nanogramy
+findNanogramsFromNanograms
+    :: [Constraints] -> Int -> Int -> [[Block]] -> [Nanogram] -> [Nanogram]
+findNanogramsFromNanograms col_const num_col row solutions nan =
+    let newNanograms =
+                (map
+                    (findNanogramsFromSolutions col_const num_col row solutions)
+                    nan
+                )
+    in  concat newNanograms
+
+-- ograniczenia kolumn -> liczba kolumn -> który wiersz -> nanogram -> tabela rozwiązań
+findNanogramsFromSolutions
+    :: [Constraints] -> Int -> Int -> [[Block]] -> Nanogram -> [Nanogram]
+findNanogramsFromSolutions col_const num_col row solutions n =
+    let newNanograms = (map (makeNanogramFromSolutionDebuger row n) solutions)
+        filteredNanograms = filterNanograms newNanograms col_const num_col
+    in  filteredNanograms
+
+makeNanogramFromSolutionDebuger row n solution =
+    trace
+            (  "makeNanogramFromSolutionDebuger: "
+            ++ show row
+            ++ "---"
+            ++ show solution
+            ++ "---"
+            ++ show n
+            )
+        $ makeNanogramFromSolution row n solution
+
+-- który wiersz -> rozwiązanie wiersza -> nanogram
+makeNanogramFromSolution :: Int -> Nanogram -> [Block] -> Nanogram
+makeNanogramFromSolution row n solution =
+    let row_colors = blocksArrayToColorArray solution
+        n_colors   = replaceRow n row_colors row
+    in  n_colors
+
+-- nanogram -> ograniczenia kolumn -> liczba kolumn
+filterNanograms :: [Nanogram] -> [Constraints] -> Int -> [Nanogram]
+filterNanograms n col_const num_col =
+    filter (checkColConstraintsDebuger col_const num_col) n
+
+checkColConstraintsDebuger col_const num_col n =
     trace
             (  "checkColConstarints: "
             ++ show n
@@ -94,16 +106,17 @@ checkColConstraintsDebuger n col_const num_col =
             ++ "---"
             ++ show num_col
             )
-        $ checkColConstraints n col_const num_col
+        $ checkColConstraints col_const num_col n
+
 -- Nanogram -> ograniczenia kolumny -> liczba kolumn
-checkColConstraints :: Nanogram -> [Constraints] -> Int -> Bool
-checkColConstraints n col_const 0 =
+checkColConstraints :: [Constraints] -> Int -> Nanogram -> Bool
+checkColConstraints col_const 0 n =
     let col        = getColumn n 0
         col_constr = col_const !! 0
     in  isMatchingConstraints col col_constr
 
-checkColConstraints n col_const num_col =
+checkColConstraints col_const num_col n =
     let col        = getColumn n (num_col)
         col_constr = col_const !! (num_col)
     in  (isMatchingConstraints col col_constr)
-            && (checkColConstraintsDebuger n col_const (num_col - 1))
+            && (checkColConstraintsDebuger col_const (num_col - 1) n)
