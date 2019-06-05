@@ -34,6 +34,7 @@ library
       Utils
       Algorithms
       Mappers
+      Solutioner
   other-modules:
       Paths_project
   hs-source-dirs:

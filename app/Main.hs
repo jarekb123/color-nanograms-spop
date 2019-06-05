@@ -1,12 +1,21 @@
 module Main where
 
-import System.Environment
-import Lib
-import Input
-import Solver
-import Model
-import Utils
-import Algorithms
+import           System.Environment
+import           Lib
+import           Input
+import           Solver
+import           Model
+import           Utils
+import           Algorithms
+import           Solutioner
+
+check :: Maybe Nanogram -> String
+check Nothing  = "false"
+check (Just n) = "true"
+
+checkNanogram :: Maybe Nanogram -> Nanogram
+checkNanogram Nothing  = emptyNanogram 4 4
+checkNanogram (Just n) = n
 
 main :: IO ()
 main = do
@@ -22,10 +31,10 @@ main = do
   putStrLn $ "--- Parsed Input ---"
 
   let columnsConstraints = getColumnsConstraints constraints
-  let rowsConstraints = getRowsConstraints constraints
+  let rowsConstraints    = getRowsConstraints constraints
 
-  let numOfColumns = length columnsConstraints
-  let numOfRows = length rowsConstraints
+  let numOfColumns       = length columnsConstraints
+  let numOfRows          = length rowsConstraints
 
   putStrLn $ ("Dimension: " ++ show numOfColumns ++ "x" ++ show numOfRows)
   putStrLn $ ("Column constraints: " ++ show columnsConstraints)
@@ -35,24 +44,77 @@ main = do
 
   ---
   putStrLn "Test 1"
-  let blocks = [(1, Black), (2, Orange)]
-  let solutions = allPossibleSolutions blocks 5
+  let blocks    = [(1, Black)]
+  let solutions = allPossibleSolutions blocks 3
 
   prettyPrint solutions
 
-  putStrLn "Test 2"
-  let constraints = [(2, Black), (2, Black)]
-  let size = 6
+  -- putStrLn "Test 2"
+  -- let constraints = [(2, Black), (2, Black)]
+  -- let size = 6
 
-  prettyPrint (allPossibleSolutions constraints size)
---  let nanogram = emptyNanogram numOfColumns numOfRows
---  putStrLn $ "--- Empty nanogram ---"
---  prettyPrint nanogram
---
---  putStrLn $ "--- Testing nanogram ---"
---  let nanogram1 = putColor nanogram Black 1 0
---  let nanogram2 = putColor (putColor (putColor nanogram1 Red 1 1) Black 0 1) Orange 2 1
---  prettyPrint nanogram2
+  -- prettyPrint (allPossibleSolutions constraints size)
+
+  let nanogram = emptyNanogram numOfColumns numOfRows
+  putStrLn $ ("--- Empty nanogram ---")
+  prettyPrint nanogram
+
+  putStrLn $ ("--- Testing nanogram ---")
+  let nanogram1 = putColor nanogram Black 1 0
+  let nanogram2 =
+        putColor (putColor (putColor nanogram1 Red 1 1) Black 0 1) Orange 2 1
+  prettyPrint nanogram2
+
+  putStrLn $ ("--- Testing replaceRow ---")
+
+  let row1 = [Black, Red, Black]
+  let row2 = [Empty, Empty, Empty]
+
+  let nan1 = replaceRow nanogram row1 0
+  let nan  = replaceRow nan1 row2 2
+
+  prettyPrint nan
+
+
+  putStrLn $ "--- Testing solutioner ---"
+  let const_1 = checkColConstraints nan columnsConstraints (numOfColumns - 1)
+  putStrLn $ (if const_1 then "true" else "false")
+
+  putStrLn $ "--- Testing checkNanograms ---"
+
+  let checkNano = checkNanograms nanogram
+                                 solutions
+                                 columnsConstraints
+                                 rowsConstraints
+                                 numOfColumns
+                                 numOfRows
+                                 0
+  let ioNano = check checkNano
+  putStrLn $ ioNano
+
+  putStrLn $ "--- Testing solve helper ---"
+  -- solveHelper :: Maybe Nanogram -> [Constraints] -> [Constraints] -> Int -> Int -> Int -> Maybe Nanogram
+  let eNanogram = emptyNanogram numOfColumns numOfRows
+
+  -- let solveNan = solveHelper (Just eNanogram)
+  --                            columnsConstraints
+  --                            rowsConstraints
+  --                            numOfColumns
+  --                            numOfRows
+  --                            0
+  -- let solvedNanogram = checkNanogram solveNan
+  -- prettyPrint solvedNanogram
+
+  putStrLn $ show
+    (solveHelper (Just eNanogram)
+                 columnsConstraints
+                 rowsConstraints
+                 numOfColumns
+                 numOfRows
+                 0
+    )
+
+
 --
 --  let row0 = getRow nanogram2 0
 --  let row0Constr = rowsConstraints !! 0

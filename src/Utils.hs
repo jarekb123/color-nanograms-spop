@@ -32,3 +32,14 @@ prettyPrint x = mapM_ print x
 -- Funkcja generująca n-elementową listę tych samych wartości
 generateN :: a -> Int -> [a]
 generateN a n = [a | _ <- [1 .. n]]
+
+-- Nanogram -> wiersz do wstawienia -> który wiersz
+replaceRow :: [[a]] -> [a] -> Int -> [[a]]
+replaceRow [[]] _ _ = []
+replaceRow n row r =
+  replaceRowHelper n row 0 r
+
+replaceRowHelper :: [[a]] -> [a] -> Int -> Int -> [[a]]
+replaceRowHelper n [] _ _ = n
+replaceRowHelper n (x:xs) col row =
+  replaceRowHelper (replaceAt2 n x col row) xs (col + 1) row
