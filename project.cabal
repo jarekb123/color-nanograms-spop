@@ -35,6 +35,7 @@ library
       Algorithms
       Mappers
       Output
+      Solutioner
   other-modules:
       Paths_project
   hs-source-dirs:
