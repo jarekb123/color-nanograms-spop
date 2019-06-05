@@ -3,6 +3,11 @@ module SolverSpec (spec) where
 import Test.Hspec
 import Model
 import Solver
+import Algorithms
+import Mappers
+
+isJust (Just _) = True
+isJust Nothing = False
 
 spec :: Spec
 spec = do
@@ -44,3 +49,21 @@ spec = do
 
       isNgNotExConstr ng 3 constr `shouldBe` False
 
+  describe "solveOne" $ do
+    it "should return Just Nanogram if the row is not exceeding columns constraints" $ do
+      let ng = []
+      let constr = [[(1, Black)], [(1, Black), (1, Red), (1, Black)], [(1, Black)]]
+
+      let (s:ss) = allPossibleSolutions [(1, Black)] 3
+      let row = blocksArrayToColorArray [(1, Empty), (1, Black), (1, Empty)]
+
+      solveOne ng 3 row constr `shouldBe` Just [[Empty, Black, Empty]]
+
+    it "should return Nothing if the row is exceeding columns constraints" $ do
+      let ng = []
+      let constr = [[(1, Black)], [(1, Black), (1, Red), (1, Black)], [(1, Black)]]
+
+      let (s:ss) = allPossibleSolutions [(1, Orange)] 3
+      let row = blocksArrayToColorArray s
+
+      solveOne ng 3 row constr `shouldBe` Nothing
