@@ -1,6 +1,6 @@
 module Model where
 
-import Data.List
+import           Data.List
 
 data Color
   = Empty
@@ -10,6 +10,7 @@ data Color
   | Green
   | Orange
   | Cyan
+  | Blue
   deriving (Show, Read, Eq)
 
 -- Block - mowi ile kratek danego koloru musi byc zamalowanych w jednym bloku

@@ -66,26 +66,26 @@ findNanogramsFromNanograms col_const num_col row solutions nan =
                 )
     in  concat newNanograms
 
--- ograniczenia kolumn -> liczba kolumn -> który wiersz -> nanogram -> tabela rozwiązań
+-- ograniczenia kolumn -> liczba kolumn -> który wiersz -> tabela rozwiązań -> nanogram
 findNanogramsFromSolutions
     :: [Constraints] -> Int -> Int -> [[Block]] -> Nanogram -> [Nanogram]
 findNanogramsFromSolutions col_const num_col row solutions n =
-    let newNanograms = (map (makeNanogramFromSolutionDebuger row n) solutions)
+    let newNanograms      = (map (makeNanogramFromSolution row n) solutions)
         filteredNanograms = filterNanograms newNanograms col_const num_col
     in  filteredNanograms
 
-makeNanogramFromSolutionDebuger row n solution =
-    trace
-            (  "makeNanogramFromSolutionDebuger: "
-            ++ show row
-            ++ "---"
-            ++ show solution
-            ++ "---"
-            ++ show n
-            )
-        $ makeNanogramFromSolution row n solution
+-- makeNanogramFromSolutionDebuger row n solution =
+--     trace
+--             (  "makeNanogramFromSolutionDebuger: "
+--             ++ show row
+--             ++ "---"
+--             ++ show solution
+--             ++ "---"
+--             ++ show n
+--             )
+--         $ makeNanogramFromSolution row n solution
 
--- który wiersz -> rozwiązanie wiersza -> nanogram
+-- który wiersz -> nanogram -> rozwiazanie wiersza
 makeNanogramFromSolution :: Int -> Nanogram -> [Block] -> Nanogram
 makeNanogramFromSolution row n solution =
     let row_colors = blocksArrayToColorArray solution
@@ -95,18 +95,18 @@ makeNanogramFromSolution row n solution =
 -- nanogram -> ograniczenia kolumn -> liczba kolumn
 filterNanograms :: [Nanogram] -> [Constraints] -> Int -> [Nanogram]
 filterNanograms n col_const num_col =
-    filter (checkColConstraintsDebuger col_const num_col) n
+    filter (checkColConstraints col_const num_col) n
 
-checkColConstraintsDebuger col_const num_col n =
-    trace
-            (  "checkColConstarints: "
-            ++ show n
-            ++ "---"
-            ++ show col_const
-            ++ "---"
-            ++ show num_col
-            )
-        $ checkColConstraints col_const num_col n
+-- checkColConstraintsDebuger col_const num_col n =
+--     trace
+--             (  "checkColConstarints: "
+--             ++ show n
+--             ++ "---"
+--             ++ show col_const
+--             ++ "---"
+--             ++ show num_col
+--             )
+--         $ checkColConstraints col_const num_col n
 
 -- Nanogram -> ograniczenia kolumny -> liczba kolumn
 checkColConstraints :: [Constraints] -> Int -> Nanogram -> Bool
@@ -119,4 +119,4 @@ checkColConstraints col_const num_col n =
     let col        = getColumn n (num_col)
         col_constr = col_const !! (num_col)
     in  (isMatchingConstraints col col_constr)
-            && (checkColConstraintsDebuger col_const (num_col - 1) n)
+            && (checkColConstraints col_const (num_col - 1) n)
